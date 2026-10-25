@@ -1,0 +1,30 @@
+name: Run Fabric AgentSchema
+
+on:
+  workflow_dispatch:
+    inputs:
+      objective:
+        description: 'Digite o objetivo analítico para a IA compilar'
+        required: true
+        default: 'Quero mapear repositórios por linguagem e quantidade de watches'
+
+jobs:
+  compile-and-query:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: pip install google-cloud-bigquery requests google-auth
+
+      - name: Execute Fabric Agent
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          python3 src/fabric_autonomous_agent.py "${{ github.event.inputs.objective }}"

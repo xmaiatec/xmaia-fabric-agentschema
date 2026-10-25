@@ -1,0 +1,20 @@
+name: 'XMAIA Fabric AgentSchema Compiler'
+description: 'Compila objetivos em meta-schemas e executa queries instantâneas via BigQuery e GenAI App Builder.'
+inputs:
+  objective:
+    description: 'Objetivo de negócio ou estrutural desejado'
+    required: true
+    default: 'Mapear repositórios mais assistidos'
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+      shell: bash
+    - name: Run Autonomous Fabric Compiler
+      run: python3 src/fabric_autonomous_agent.py "${{ inputs.objective }}"
+      shell: bash
